@@ -1,7 +1,19 @@
+import { globalActions } from "../../slices/globalSlice";
+import { useAppDispatch } from "../../store/store";
+
 const SideBarBtn = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { setSidebar } = globalActions;
+
+  const handleClick = (): void => {
+    dispatch(setSidebar(true));
+  };
   return (
     <>
-      <button className="min-w-[48px] border shadow-sm rounded-lg flex items-center justify-center hover:border-[#B3202C] transition">
+      <button
+        className="min-w-[48px] border shadow-sm rounded-lg flex items-center justify-center hover:border-[#B3202C] transition"
+        onClick={handleClick}
+      >
         <svg
           width="24"
           height="24"

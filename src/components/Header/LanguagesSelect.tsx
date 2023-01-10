@@ -19,7 +19,7 @@ const LanguagesSelect = (): JSX.Element => {
             <path
               d="M6 9L12 15L18 9"
               stroke="currentColor"
-              stroke-width="2"
+              strokeWidth="2"
             ></path>
           </svg>
         </div>
