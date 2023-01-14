@@ -40,6 +40,11 @@ const cors_1 = __importDefault(require("cors"));
 const mongoDB = __importStar(require("mongodb"));
 const url = `mongodb+srv://admin:admin@cluster0.x9dzgnt.mongodb.net/cafe-menu?retryWrites=true&w=majority`;
 const data = { db: null };
+const DBFunc = () => __awaiter(void 0, void 0, void 0, function* () {
+    const user = new mongoDB.MongoClient(url);
+    yield user.connect();
+    return user.db();
+});
 const port = 8000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -52,7 +57,7 @@ app.get("/menu", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         for (let menu of info) {
             const options = [];
             for (let option of menu.categories) {
-                const description = yield ((_b = data.db) === null || _b === void 0 ? void 0 : _b.collection("categories").findOne({ _id: new mongoDB.ObjectId(`${option}`) }));
+                const description = yield ((_b = data.db) === null || _b === void 0 ? void 0 : _b.collection("categories").findOne({ _id: new mongoDB.ObjectId(option) }));
                 if (description) {
                     options.push(description.name);
                 }
@@ -64,13 +69,32 @@ app.get("/menu", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.json(null);
     res.json(menuData);
 }));
+app.get("/categories/:menu", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c, _d, _e;
+    const { menu } = req.params;
+    const menuCategories = yield ((_c = data.db) === null || _c === void 0 ? void 0 : _c.collection("menu").findOne({ name: menu }));
+    const dishesCategoryData = [];
+    for (let category of menuCategories === null || menuCategories === void 0 ? void 0 : menuCategories.categories) {
+        const dishesCategory = { categoryName: "", dishes: [] };
+        const info = yield ((_d = data.db) === null || _d === void 0 ? void 0 : _d.collection("categories").findOne({ _id: new mongoDB.ObjectId(category) }));
+        dishesCategory.categoryName = info === null || info === void 0 ? void 0 : info.name;
+        for (let dishString of info === null || info === void 0 ? void 0 : info.options) {
+            const dish = yield ((_e = data.db) === null || _e === void 0 ? void 0 : _e.collection("dishes").findOne({ _id: new mongoDB.ObjectId(dishString) }));
+            if (dish) {
+                dishesCategory.dishes.push({
+                    id: dish._id,
+                    name: dish.name,
+                    price: dish.price,
+                    description: dish.description,
+                    likes: dish.likes,
+                });
+            }
+        }
+        dishesCategoryData.push(dishesCategory);
+    }
+    res.json(dishesCategoryData);
+}));
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
-    const user = new mongoDB.MongoClient(url);
-    yield user.connect();
-    data.db = user.db();
+    data.db = yield DBFunc();
     console.log(`Server is running on port ${port}.`);
 }));
-// {
-//   name: "";
-//   option: [];
-// }

@@ -15,6 +15,12 @@ export interface Menu {
 
 const data: DB = { db: null };
 
+const DBFunc = async () => {
+  const user: mongoDB.MongoClient = new mongoDB.MongoClient(url);
+  await user.connect();
+  return user.db();
+};
+
 const port: number = 8000;
 
 const app: Express = express();
@@ -30,7 +36,7 @@ app.get("/menu", async (req: Request, res: Response) => {
       for (let option of menu.categories) {
         const description = await data.db
           ?.collection("categories")
-          .findOne({ _id: new mongoDB.ObjectId(`${option}`) });
+          .findOne({ _id: new mongoDB.ObjectId(option) });
         if (description) {
           options.push(description.name);
         }
@@ -38,18 +44,59 @@ app.get("/menu", async (req: Request, res: Response) => {
       menuData.push({ name: menu.name, options });
     }
   }
+
   if (menuData.length == 0) return res.json(null);
   res.json(menuData);
 });
 
-app.listen(port, async (): Promise<void> => {
-  const user: mongoDB.MongoClient = new mongoDB.MongoClient(url);
-  await user.connect();
-  data.db = user.db();
-  console.log(`Server is running on port ${port}.`);
+interface Dish {
+  id: mongoDB.ObjectId;
+  name: string;
+  price: number;
+  description: string;
+  likes: number;
+}
+
+export interface DishesCategory {
+  categoryName: string;
+  dishes: Dish[];
+}
+
+app.get("/categories/:menu", async (req: Request, res: Response) => {
+  const { menu } = req.params;
+  const menuCategories = await data.db
+    ?.collection("menu")
+    .findOne({ name: menu });
+
+  const dishesCategoryData: DishesCategory[] = [];
+
+  for (let category of menuCategories?.categories) {
+    const dishesCategory: DishesCategory = { categoryName: "", dishes: [] };
+    const info = await data.db
+      ?.collection("categories")
+      .findOne({ _id: new mongoDB.ObjectId(category) });
+
+    dishesCategory.categoryName = info?.name;
+    for (let dishString of info?.options) {
+      const dish = await data.db
+        ?.collection("dishes")
+        .findOne({ _id: new mongoDB.ObjectId(dishString) });
+      if (dish) {
+        dishesCategory.dishes.push({
+          id: dish._id,
+          name: dish.name,
+          price: dish.price,
+          description: dish.description,
+          likes: dish.likes,
+        });
+      }
+    }
+    dishesCategoryData.push(dishesCategory);
+  }
+  res.json(dishesCategoryData);
 });
 
-// {
-//   name: "";
-//   option: [];
-// }
+app.listen(port, async (): Promise<void> => {
+  data.db = await DBFunc();
+  console.log(`Server is running on port ${port}.`);
+});
