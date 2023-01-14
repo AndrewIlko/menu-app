@@ -20,7 +20,7 @@ const SideMenu = (): JSX.Element => {
   return (
     <>
       <div
-        className={`bg-[rgb(0,0,0,0.4)] absolute w-full h-full flex justify-end top-0 items-start overflow-hidden transition-all ease-in-out duration-200 z-10 ${
+        className={`bg-[rgb(0,0,0,0.4)] fixed w-full h-full flex justify-end top-0 items-start overflow-hidden transition-all ease-in-out duration-200 z-10 ${
           !active ? "opacity-0 invisible" : "opacity-1 visible"
         }`}
         onClick={(event) => handleClick(event)}

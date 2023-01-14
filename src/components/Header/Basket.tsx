@@ -23,7 +23,7 @@ const Basket = (): JSX.Element => {
             ></path>
           </svg>
         </div>
-        Basket is empty
+        Items not selected
       </button>
     </>
   );
