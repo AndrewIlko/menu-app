@@ -4,18 +4,22 @@ import { RootState } from "../../store/store";
 import { globalActions } from "../../slices/globalSlice";
 import SidebarOption from "./SidebarOption";
 
+import { ReactComponent as CrossIcon } from "../../assets/svg/cross.svg";
+import { useRef } from "react";
+import useDetectLeave from "../../custom-hooks/useDetectLeave";
+
 const SideMenu = (): JSX.Element => {
-  const dispatch = useAppDispatch();
   const { active } = useSelector((state: RootState) => state.page.sidebar);
+  const dispatch = useAppDispatch();
   const { setSidebar } = globalActions;
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
-    console.log(event);
-    const elememt = event.target as HTMLInputElement;
+  const sideBarRef = useRef<HTMLDivElement | null>(null);
 
-    if (elememt.dataset.name === "bg" || elememt.localName === "button")
-      dispatch(setSidebar(!active));
+  const handleCloseSideBar = () => {
+    dispatch(setSidebar(false));
   };
+
+  useDetectLeave(sideBarRef, handleCloseSideBar);
 
   return (
     <>
@@ -23,29 +27,17 @@ const SideMenu = (): JSX.Element => {
         className={`bg-[rgb(0,0,0,0.4)] fixed w-full h-full flex justify-end top-0 items-start overflow-hidden transition-all ease-in-out duration-200 z-10 ${
           !active ? "opacity-0 invisible" : "opacity-1 visible"
         }`}
-        onClick={(event) => handleClick(event)}
-        data-name="bg"
       >
         <button
           className={`mr-5 mt-4 w-12 h-12 flex items-center relative text-white justify-center rounded-lg shadow-sm bg-[#B3202C] hover:bg-red-600 transition-all ease-in-out duration-200 -translate-y-20 ${
             active && "-translate-y-0"
           }`}
-          onClick={(event) => handleClick(event)}
+          onClick={() => handleCloseSideBar()}
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M11.7712 3.28686L8 7.0581L4.22876 3.28686L3.28595 4.22967L7.05719 8.00091L3.28595 11.7721L4.22876 12.715L8 8.94372L11.7712 12.715L12.714 11.7721L8.94281 8.00091L12.714 4.22967L11.7712 3.28686Z"
-              fill="currentColor"
-            ></path>
-          </svg>
+          <CrossIcon />
         </button>
         <div
+          ref={sideBarRef}
           className={`w-[360px] h-full bg-white transition-all ease-in-out duration-200 py-4 flex ${
             !active && "translate-x-[100%] "
           }`}

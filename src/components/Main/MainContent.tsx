@@ -1,5 +1,5 @@
 import MainContentCenter from "./MainContentCenter";
-import MainContentLeft from "./MainContentLeft";
+import MainContentLeft from "./MainContentLeft/MainContentLeft";
 import MainContentRight from "./MainContentRight";
 
 const MainContent = (): JSX.Element => {

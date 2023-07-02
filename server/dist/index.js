@@ -74,7 +74,7 @@ app.get("/categories/:menu", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const { menu } = req.params;
     const menuCategories = yield ((_c = data.db) === null || _c === void 0 ? void 0 : _c.collection("menu").findOne({ name: menu }));
     const dishesCategoryData = [];
-    for (let category of menuCategories === null || menuCategories === void 0 ? void 0 : menuCategories.categories) {
+    for (let category of menuCategories.categories) {
         const dishesCategory = { categoryName: "", dishes: [] };
         const info = yield ((_d = data.db) === null || _d === void 0 ? void 0 : _d.collection("categories").findOne({ _id: new mongoDB.ObjectId(category) }));
         dishesCategory.categoryName = info === null || info === void 0 ? void 0 : info.name;

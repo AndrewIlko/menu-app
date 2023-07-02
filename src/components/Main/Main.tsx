@@ -7,7 +7,7 @@ const Main = (): JSX.Element => {
     <>
       <main className="min-h-[calc(100vh-80px)] h-full ">
         <Container>
-          <MainSlide />
+          {/* <MainSlide /> */}
           <MainContent />
         </Container>
       </main>

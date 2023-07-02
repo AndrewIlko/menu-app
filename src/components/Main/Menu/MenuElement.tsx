@@ -1,5 +1,5 @@
 import { Menu } from "../../../../server";
-import uuid from "react-uuid";
+import { nanoid } from "@reduxjs/toolkit";
 import MenuOption from "./MenuOption";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../../store/store";
@@ -43,7 +43,7 @@ const MenuElement = ({ data: { name, options } }: { data: Menu }) => {
           ref={list}
         >
           {options.map((option) => {
-            return <MenuOption key={uuid()}>{option}</MenuOption>;
+            return <MenuOption key={nanoid()}>{option}</MenuOption>;
           })}
         </ul>
       </div>
