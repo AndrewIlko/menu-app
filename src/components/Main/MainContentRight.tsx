@@ -5,7 +5,7 @@ import VenueInformation from "./VenueInformation";
 const MainContentRight = (): JSX.Element => {
   return (
     <>
-      <div className="w-[272px] max-h-[calc(100vh-80px)] sticky top-20 py-6">
+      <div className="max-w-[272px] lg:min-w-[225px] w-full max-h-[calc(100vh-80px)] sticky top-20 py-6">
         <MenuSearch />
         <MenuDescription />
         <VenueInformation />

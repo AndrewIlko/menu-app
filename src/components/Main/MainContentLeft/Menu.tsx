@@ -2,6 +2,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { ReactComponent as ArrowDownIcon } from "../../../assets/svg/arrowDown.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "../../../slices/globalSlice";
+import useResizeObserver from "../../../custom-hooks/useResizeObserver";
 
 export const menu = [
   {
@@ -162,36 +163,71 @@ export const menu = [
   },
 ];
 
-const Menu = () => {
-  const { selected } = useSelector((state: any) => state.page.menu);
+type MenuElement = {
+  isSelected: boolean;
+  data: {
+    id: string;
+    menu_name: string;
+    categories: string[];
+  };
+};
+
+const MenuElement = (props: MenuElement) => {
+  const {
+    isSelected,
+    data: { id, menu_name, categories },
+  } = props;
+
   const { setSelectedMenu } = globalActions;
   const dispatch = useDispatch();
 
+  const [menuCategoriesRef, dimensions] = useResizeObserver();
+  console.log(dimensions);
+
+  return (
+    <div>
+      <div
+        className="flex gap-[16px] cursor-pointer"
+        onClick={() => dispatch(setSelectedMenu(id))}
+      >
+        <ArrowDownIcon
+          className={`${isSelected ? "rotate-0" : "rotate-[-90deg]"}`}
+        />
+        <h1 className="font-[700]">{menu_name}</h1>
+      </div>
+      <div
+        className="overflow-hidden transition-all duration-200"
+        style={{
+          height: isSelected ? dimensions.height + 30 + "px" : 0,
+        }}
+      >
+        <div
+          ref={menuCategoriesRef}
+          className="flex flex-col gap-[10px] ml-[40px]  my-[15px]"
+        >
+          {categories.map((category: any) => {
+            const { category_name } = category;
+            return (
+              <div className="cursor-pointer whitespace-nowrap">
+                {category_name}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Menu = () => {
+  const { selected } = useSelector((state: any) => state.page.menu);
   return (
     <>
       <div className="flex flex-col">
         {menu.map((menuEl: any) => {
-          const { id, menu_name, categories } = menuEl;
+          const { id } = menuEl;
           const isSelected = selected === id;
-          return (
-            <div key={nanoid()}>
-              <div
-                className="flex gap-[16px] cursor-pointer"
-                onClick={() => dispatch(setSelectedMenu(id))}
-              >
-                <ArrowDownIcon
-                  className={`${isSelected ? "rotate-0" : "rotate-[-90deg]"}`}
-                />
-                <h1 className="font-[700]">{menu_name}</h1>
-              </div>
-              <div className="flex flex-col gap-[10px] ml-[40px] my-[15px]">
-                {categories.map((category: any) => {
-                  const { category_name } = category;
-                  return <div className="cursor-pointer">{category_name}</div>;
-                })}
-              </div>
-            </div>
-          );
+          return <MenuElement key={id} data={menuEl} isSelected={isSelected} />;
         })}
       </div>
     </>

@@ -9,7 +9,7 @@ const MainContentLeft = () => {
 
   return (
     <>
-      <div className="w-[272px] max-h-[calc(100vh-80px)] sticky top-[95px] my-6">
+      <div className="max-w-[200px] w-full max-h-[calc(100vh-80px)] sticky top-[95px] my-6">
         {/* {menu &&
           menu.map((data: Menu): JSX.Element => {
             return <MenuElement key={nanoid()} data={data} />;

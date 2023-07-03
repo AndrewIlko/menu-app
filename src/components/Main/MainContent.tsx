@@ -5,7 +5,7 @@ import MainContentRight from "./MainContentRight";
 const MainContent = (): JSX.Element => {
   return (
     <>
-      <div className="flex flex-1 ">
+      <div className="flex flex-1 gap-[30px]">
         <MainContentLeft />
         <MainContentCenter />
         <MainContentRight />

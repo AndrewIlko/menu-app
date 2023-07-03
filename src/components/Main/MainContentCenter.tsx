@@ -15,7 +15,7 @@ const MainContentCenter = () => {
 
   return (
     <>
-      <div className="w-full flex flex-1 flex-col my-[24px] mr-[40px]">
+      <div className="w-full flex flex-1 flex-col my-[24px] min-w-[500px]">
         {menu[0].categories.map((menuEl: any) => {
           const { category_name, options } = menuEl;
           console.log(options);
