@@ -219,7 +219,7 @@ const MenuElement = (props: MenuElement) => {
   );
 };
 
-const Menu = () => {
+export const Menu = () => {
   const { selected } = useSelector((state: any) => state.page.menu);
   return (
     <>
@@ -234,4 +234,21 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export const MenuMobile = () => {
+  const { selected } = useSelector((state: any) => state.page.menu);
+  const menus = menu.map((menuEl) => ({
+    id: menuEl.id,
+    menu_name: menuEl.menu_name,
+  }));
+
+  return (
+    <div className="flex flex-col black-scroll">
+      <div className="flex gap-[30px] overflow-x-auto pb-[15px]">
+        {menus.map((menuEl) => {
+          const { menu_name, id } = menuEl;
+          return <button key={id}>{menu_name}</button>;
+        })}
+      </div>
+    </div>
+  );
+};

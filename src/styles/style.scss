@@ -20,3 +20,19 @@ body,
 svg {
   pointer-events: none;
 }
+
+.black-scroll {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 8px;
+  }
+}
