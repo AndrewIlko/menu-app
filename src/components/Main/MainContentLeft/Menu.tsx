@@ -236,19 +236,31 @@ export const Menu = () => {
 
 export const MenuMobile = () => {
   const { selected } = useSelector((state: any) => state.page.menu);
+  const { setSelectedMenu } = globalActions;
+  const dispatch = useDispatch();
+
   const menus = menu.map((menuEl) => ({
     id: menuEl.id,
     menu_name: menuEl.menu_name,
   }));
+
+  const selectedMenu = menu.find((menuEl) => menuEl.id === selected);
+
+  console.log(selectedMenu);
 
   return (
     <div className="flex flex-col black-scroll">
       <div className="flex gap-[30px] overflow-x-auto pb-[15px]">
         {menus.map((menuEl) => {
           const { menu_name, id } = menuEl;
-          return <button key={id}>{menu_name}</button>;
+          return (
+            <button onClick={() => dispatch(setSelectedMenu(id))} key={id}>
+              {menu_name}
+            </button>
+          );
         })}
       </div>
+      <div className="flex gap-[15px]"></div>
     </div>
   );
 };
