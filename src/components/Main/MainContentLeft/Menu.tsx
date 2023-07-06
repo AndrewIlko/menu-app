@@ -3,6 +3,8 @@ import { ReactComponent as ArrowDownIcon } from "../../../assets/svg/arrowDown.s
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "../../../slices/globalSlice";
 import useResizeObserver from "../../../custom-hooks/useResizeObserver";
+import { useEffect } from "react";
+import useTopDistance from "../../../custom-hooks/useTopDistance";
 
 export const menu = [
   {
@@ -185,7 +187,7 @@ const MenuElement = (props: MenuElement) => {
   console.log(dimensions);
 
   return (
-    <div>
+    <>
       <div
         className="flex gap-[16px] cursor-pointer"
         onClick={() => dispatch(setSelectedMenu(id))}
@@ -215,7 +217,7 @@ const MenuElement = (props: MenuElement) => {
           })}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -234,9 +236,16 @@ export const Menu = () => {
   );
 };
 
+type MenuMobileCategory = {
+  id: string;
+  name: string;
+};
+
 export const MenuMobile = () => {
-  const { selected } = useSelector((state: any) => state.page.menu);
-  const { setSelectedMenu } = globalActions;
+  const { selected, selectedCategory } = useSelector(
+    (state: any) => state.page.menu
+  );
+  const { setSelectedMenu, setSelectedCategory } = globalActions;
   const dispatch = useDispatch();
 
   const menus = menu.map((menuEl) => ({
@@ -244,12 +253,21 @@ export const MenuMobile = () => {
     menu_name: menuEl.menu_name,
   }));
 
-  const selectedMenu = menu.find((menuEl) => menuEl.id === selected);
+  useEffect(() => {
+    dispatch(setSelectedMenu(menus[0].id));
+  }, []);
 
-  console.log(selectedMenu);
+  const selectedMenuCategories = menu
+    .find((menuEl) => menuEl.id === selected)
+    ?.categories.map((category) => ({
+      id: category.id,
+      name: category.category_name,
+    }));
+
+  const [menuCategoriesRef, topDistance] = useTopDistance();
 
   return (
-    <div className="flex flex-col black-scroll">
+    <>
       <div className="flex gap-[30px] overflow-x-auto pb-[15px]">
         {menus.map((menuEl) => {
           const { menu_name, id } = menuEl;
@@ -260,7 +278,26 @@ export const MenuMobile = () => {
           );
         })}
       </div>
-      <div className="flex gap-[15px]"></div>
-    </div>
+      <div className="sticky top-0 left-0 w-full bg-[#fff] z-[50]">
+        <div ref={menuCategoriesRef} className="flex gap-[10px] py-[10px]">
+          {selectedMenuCategories?.map((category: MenuMobileCategory) => {
+            const { id, name } = category;
+            return (
+              <div
+                onClick={() => dispatch(setSelectedCategory(id))}
+                className={`px-[15px] py-[5px] rounded-[6px] border cursor-pointer ${
+                  selectedCategory === id
+                    ? "border-[2px] border-neutral-600"
+                    : ""
+                }`}
+                key={id}
+              >
+                {name}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 };

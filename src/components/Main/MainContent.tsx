@@ -28,9 +28,7 @@ const MainContent = (): JSX.Element => {
   return (
     <>
       <div className="flex flex-1 flex-col pt-[24px]">
-        <div className="w-full h-[120px] border p-[20px]">
-          <MenuMobile />
-        </div>
+        <MenuMobile />
         <div className="flex flex-1 gap-[15px] py-[24px]">
           <MainContentCenter />
           <MainContentRight />

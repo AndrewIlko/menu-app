@@ -6,7 +6,7 @@ import SideMenu from "./Sidebar/SideMenu";
 const Header = (): JSX.Element => {
   return (
     <>
-      <header className="w-full h-20 flex sticky top-0 z-10 bg-white">
+      <header className="w-full h-20 flex bg-white">
         <Container>
           <div className="flex justify-between items-center h-full">
             <Logo />

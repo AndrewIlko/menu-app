@@ -5,6 +5,7 @@ type Sidebar = {
 };
 interface MenuOption {
   selected: string | undefined;
+  selectedCategory: string | undefined;
 }
 
 interface GlobalSlice {
@@ -14,7 +15,7 @@ interface GlobalSlice {
 
 const initialState: GlobalSlice = {
   sidebar: { active: false },
-  menu: { selected: undefined },
+  menu: { selected: undefined, selectedCategory: undefined },
 };
 
 const globalSlice = createSlice({
@@ -26,6 +27,9 @@ const globalSlice = createSlice({
     },
     setSelectedMenu: (state, action: PayloadAction<string>) => {
       state.menu.selected = action.payload;
+    },
+    setSelectedCategory: (state, action: PayloadAction<string>) => {
+      state.menu.selectedCategory = action.payload;
     },
   },
 });
